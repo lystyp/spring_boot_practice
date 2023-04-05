@@ -37,7 +37,8 @@ public class UploadImageController {
                          @RequestParam("file2") MultipartFile file2,
                          @RequestParam("file3") MultipartFile file3,
                          HttpServletRequest request) throws IOException {
-        if (oauth2AuthorizedClientProvider.getClient() == null) {
+        if (oauth2AuthorizedClientProvider.getClient() == null
+        || !oauth2AuthorizedClientProvider.getClient().getClientRegistration().getClientName().equals("Google")) {
             HttpSession session = request.getSession();
             session.setAttribute("requestUrl", "/upload");
             return "redirect:/oauth2/authorization/google";

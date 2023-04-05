@@ -1,7 +1,10 @@
 package com.example.spring_boot_pracrice.controller;
 
+import com.example.spring_boot_pracrice.Utils.OAuth2AuthorizedClientProvider;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -20,15 +23,20 @@ import java.net.URI;
 @Controller
 @Slf4j
 public class UserController {
+    @Autowired
+    private OAuth2AuthorizedClientProvider oauth2AuthorizedClientProvider;
 
     @GetMapping("/user")
-    public String getUser(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, Model model,
-                          HttpServletRequest request) {
-        log.info("Login success");
-        request.getCookies();
-        String token = authorizedClient.getAccessToken().getTokenValue();
+    public String getUser(Model model, HttpServletRequest request) {
+        if (oauth2AuthorizedClientProvider.getClient() == null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("requestUrl", "/user");
+            return "redirect:/login";
+        }
+
+        String token = oauth2AuthorizedClientProvider.getClient().getAccessToken().getTokenValue();
         log.info("Token = " + token);
-        if (authorizedClient.getClientRegistration().getClientName().equals("Google")) {
+        if (oauth2AuthorizedClientProvider.getClient().getClientRegistration().getClientName().equals("Google")) {
             log.info("Login by google.");
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -56,7 +64,7 @@ public class UserController {
                 return e.toString();
             }
 
-        } else if (authorizedClient.getClientRegistration().getClientName().equals("Facebook")) {
+        } else if (oauth2AuthorizedClientProvider.getClient().getClientRegistration().getClientName().equals("Facebook")) {
             log.info("Login by Facebook.");
 //            Facebook facebook = new FacebookTemplate(token);
 //            PagedList<Page> likes = facebook.fetchConnections("me", "likes", Page.class);
