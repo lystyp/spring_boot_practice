@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Upload</title>
+    <style>
+        .image-preview {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Upload Images</h1>
+
+<form action="/upload" method="post"  enctype="multipart/form-data">
+    <div>
+        <label for="file1">Image 1:</label>
+        <input type="file" id="file1" name="file1" accept="image/*" onchange="previewImage(event, 'preview1')">
+        <div id="preview1" class="image-preview"></div>
+    </div>
+
+    <div>
+        <label for="file2">Image 2:</label>
+        <input type="file" id="file2" name="file2" accept="image/*" onchange="previewImage(event, 'preview2')">
+        <div id="preview2" class="image-preview"></div>
+    </div>
+
+    <div>
+        <label for="file3">Image 3:</label>
+        <input type="file" id="file3" name="file3" accept="image/*" onchange="previewImage(event, 'preview3')">
+        <div id="preview3" class="image-preview"></div>
+    </div>
+
+    <button type="submit">上傳至google drive</button>
+</form>
+
+<script>
+        function previewImage(event, previewId) {
+            var preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    var img = document.createElement('img');
+                    img.src = reader.result;
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

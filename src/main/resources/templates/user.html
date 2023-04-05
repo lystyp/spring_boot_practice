@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <style>
+		table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+			padding: 5px;
+		}
+	</style>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSIdlToy55GqLq8XyF-l-NumtkCWteAC2CJgoaVN70&s"
+         th:src="${pictureUrl}" alt="My Profile Picture">
+    <p><strong>Name:</strong> <span th:text="${name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+    <table  th:if="${pages}">
+        <thead>
+        <tr>
+            <th >Liked pages</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="page : ${pages}">
+            <td th:text="${page}" ></td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

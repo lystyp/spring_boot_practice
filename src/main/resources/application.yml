@@ -3,18 +3,23 @@ server:
 
 logging:
   level:
-    root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-#    org.springframework.boot.autoconfigure: DEBUG
+    root: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.security: DEBUG
 
 spring:
-  thymeleaf:
-    cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
+            client-id: 65627264865-nqjqb4qj57pqhg2o2k7bh3u97leddjpi.apps.googleusercontent.com
+            client-secret: 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
+            scope: email, profile, openid, https://www.googleapis.com/auth/drive
+          facebook:
+            client-id: 252126993879437
+            client-secret: 6cefbcc1092c66b260c71bf159839ca5
