@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
 <head>
     <meta charset="UTF-8">
     <title>Image Upload</title>
@@ -38,27 +40,31 @@
         <div id="preview3" class="image-preview"></div>
     </div>
 
-    <button type="submit">上傳至google drive</button>
+    <button id="uploadBtn" type="submit">上傳至google drive</button>
 </form>
+<div th:text="${upload}">
+</div>
 <div id="footer">
     <a href="/">回首頁</a>
 </div>
-<script>
-        function previewImage(event, previewId) {
-            var preview = document.getElementById(previewId);
-            preview.innerHTML = '';
 
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function() {
-                    var img = document.createElement('img');
-                    img.src = reader.result;
-                    preview.appendChild(img);
-                }
-                reader.readAsDataURL(file);
+<script>
+    function previewImage(event, previewId) {
+        var preview = document.getElementById(previewId);
+        preview.innerHTML = '';
+
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var img = document.createElement('img');
+                img.src = reader.result;
+                preview.appendChild(img);
             }
+            reader.readAsDataURL(file);
         }
+    }
+
     </script>
 </body>
 </html>

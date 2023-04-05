@@ -16,6 +16,8 @@ public class OAuth2AuthorizedClientProvider {
 
     public OAuth2AuthorizedClient getClient() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof OAuth2AuthenticationToken))
+            return null;
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         return clientService.loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
     }

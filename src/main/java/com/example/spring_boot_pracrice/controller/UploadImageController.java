@@ -9,7 +9,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,8 @@ import java.io.IOException;
 public class UploadImageController {
     @Autowired
     private OAuth2AuthorizedClientProvider oauth2AuthorizedClientProvider;
+//    @Autowired
+//    private SimpMessagingTemplate template;
 
     public UploadImageController() {
     }
@@ -36,7 +41,8 @@ public class UploadImageController {
     public String upload(@RequestParam("file1") MultipartFile file1,
                          @RequestParam("file2") MultipartFile file2,
                          @RequestParam("file3") MultipartFile file3,
-                         HttpServletRequest request) throws IOException {
+                         HttpServletRequest request,
+                         Model model) throws IOException {
         if (oauth2AuthorizedClientProvider.getClient() == null
         || !oauth2AuthorizedClientProvider.getClient().getClientRegistration().getClientName().equals("Google")) {
             HttpSession session = request.getSession();
@@ -48,19 +54,30 @@ public class UploadImageController {
         log.debug("file1 : " + file1.getOriginalFilename());
         log.debug("file2 : " + file2.getOriginalFilename());
         log.debug("file3 : " + file3.getOriginalFilename());
+        String names = "";
         if (!file1.isEmpty()) {
             uploadFile(token, file1);
+            names += file1.getOriginalFilename();
         }
         if (!file2.isEmpty()) {
             uploadFile(token, file2);
+            names += ", " + file2.getOriginalFilename();
+
         }
         if (!file3.isEmpty()) {
             uploadFile(token, file3);
+            names += ", " + file3.getOriginalFilename();
         }
 
-
+        model.addAttribute("upload", names + " 上傳完成");
         return "upload";
     }
+
+//    @MessageMapping("/update")
+//    public void update() {
+//        // 傳送訊息至前端
+//        template.convertAndSend("/topic/update", "畫面已更新");
+//    }
 
     private void uploadFile(String accessToken, MultipartFile file) {
         log.info("uploadFile : " + file.getOriginalFilename());
